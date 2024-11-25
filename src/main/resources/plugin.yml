@@ -1,0 +1,22 @@
+name: BuddySystem
+version: '1.0-SNAPSHOT'
+main: de.buuddyyy.buddysystem.BuddySystemPlugin
+api-version: '1.21'
+authors: [ buuddyyy ]
+depend: [ ProtocolLib ]
+commands:
+  delhome:
+  enderchest:
+    aliases: [ ec ]
+  home:
+  homes:
+  sethome:
+  setspawn:
+  spawn:
+  tpaccept:
+  tpa:
+  tpdeny:
+  invsee:
+  warp:
+  setwarp:
+  delwarp:
