@@ -3,7 +3,6 @@ package de.buuddyyy.buddysystem.handlers;
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
 import de.buuddyyy.buddysystem.managers.PlayerManager;
 import de.buuddyyy.buddysystem.sql.entities.PlayerEntity;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;

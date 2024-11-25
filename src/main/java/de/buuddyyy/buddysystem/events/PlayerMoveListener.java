@@ -19,7 +19,6 @@ public class PlayerMoveListener implements Listener {
         final var p = event.getPlayer();
         if (plugin.getTeleportHandler().handleMove(event) != TeleportHandler.EnumPlayerTeleportStatus.OK) {
             p.sendMessage(this.plugin.getPrefix() + "§cDu hast dich bewegt. Teleportation wurde abgebrochen!");
-            return;
         }
     }
 

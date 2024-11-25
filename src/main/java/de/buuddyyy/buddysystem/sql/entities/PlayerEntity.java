@@ -28,12 +28,19 @@ public final class PlayerEntity {
     @Setter
     private Timestamp lastOnline;
 
+    @Getter
+    private boolean autoChestLock = false;
+
     public PlayerEntity(UUID playerUuid, String playerName) {
         this.playerUuid = playerUuid;
         this.playerName = playerName;
     }
 
     public PlayerEntity() {
+    }
+
+    public void toggleAutoChestLock() {
+        this.autoChestLock = !this.autoChestLock;
     }
 
 }

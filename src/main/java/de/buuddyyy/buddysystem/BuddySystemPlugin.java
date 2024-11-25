@@ -21,6 +21,7 @@ import de.buuddyyy.buddysystem.handlers.*;
 import de.buuddyyy.buddysystem.protocol.ActionBarProtocolAdapter;
 import de.buuddyyy.buddysystem.sql.DatabaseManager;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -118,7 +119,7 @@ public final class BuddySystemPlugin extends JavaPlugin {
         this.registerCommand("delwarp", new DelWarpCommand(this));
     }
 
-    private void registerCommand(String command, CommandExecutor commandExecutor) {
+    private void registerCommand(String command, @NonNull CommandExecutor commandExecutor) {
         final PluginCommand pc = this.getCommand(command);
         pc.setExecutor(commandExecutor);
         if (commandExecutor instanceof TabCompleter) {

@@ -56,7 +56,10 @@ public final class TeleportHandler {
 
         PLAYER_TELEPORT_RUNNABLES.put(targetPlayer.getUniqueId(), Bukkit.getScheduler()
                 .runTaskLater(BuddySystemPlugin.getPlugin(), () -> {
-            targetPlayer.teleport(teleportLocation);
+
+            if (targetPlayer.isOp()) {
+                targetPlayer.teleport(teleportLocation);
+            }
 
             cancelAndRemoveTeleportTask(targetPlayer);
         }, 20L * TELEPORT_DELAY_SECONDS));
