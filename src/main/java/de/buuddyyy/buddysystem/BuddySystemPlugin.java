@@ -56,18 +56,41 @@ public final class BuddySystemPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         BuddySystemPlugin.plugin = this;
+
         this.mainConfig = new MainConfig(this);
         this.mainConfig.loadConfig();
+
         this.databaseManager = new DatabaseManager(this.mainConfig);
         this.databaseManager.openConnection();
 
+        initHandlers();
+
+        registerEvents();
+
+        this.protocolManager.addPacketListener(new ActionBarProtocolAdapter(this));
+
+        registerCommands();
+    }
+
+    @Override
+    public void onDisable() {
+        try {
+            this.databaseManager.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void initHandlers() {
         this.playerHandler = new PlayerHandler(this);
         this.teleportHandler = new TeleportHandler(this);
         this.homeHandler = new HomeHandler(this);
         this.skipNightHandler = new SkipNightHandler(this);
         this.spawnHandler = new SpawnHandler(this);
         this.warpHandler = new WarpHandler(this);
+    }
 
+    private void registerEvents() {
         final PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new FoodLevelChangeListener(), this);
         pm.registerEvents(new PlayerBedEnterListener(this), this);
@@ -76,9 +99,9 @@ public final class BuddySystemPlugin extends JavaPlugin {
         pm.registerEvents(new PlayerJoinListener(this), this);
         pm.registerEvents(new PlayerMoveListener(this), this);
         pm.registerEvents(new PlayerQuitListener(this), this);
+    }
 
-        this.protocolManager.addPacketListener(new ActionBarProtocolAdapter(this));
-
+    private void registerCommands() {
         this.registerCommand("delhome", new DelHomeCommand(this));
         this.getCommand("enderchest").setExecutor(new EnderChestCommand(this));
         this.registerCommand("home", new HomeCommand(this));
@@ -93,15 +116,6 @@ public final class BuddySystemPlugin extends JavaPlugin {
         this.registerCommand("warp", new WarpCommand(this));
         this.registerCommand("setwarp", new SetWarpCommand(this));
         this.registerCommand("delwarp", new DelWarpCommand(this));
-    }
-
-    @Override
-    public void onDisable() {
-        try {
-            this.databaseManager.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void registerCommand(String command, CommandExecutor commandExecutor) {
