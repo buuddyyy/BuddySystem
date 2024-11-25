@@ -102,7 +102,7 @@ public class EnderChestHandler {
 
     private boolean canIntegrateEnderChest(Player player) {
         var legacyEnderChest = player.getEnderChest();
-        if (legacyEnderChest.isEmpty()) {
+        if (enderChestManager.hasEnderChest(player.getUniqueId())) {
             return false;
         }
         var inv = Bukkit.createInventory(null, INVENTORY_SIZE);

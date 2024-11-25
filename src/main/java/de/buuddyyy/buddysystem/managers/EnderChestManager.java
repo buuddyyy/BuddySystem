@@ -11,7 +11,6 @@ import de.buuddyyy.buddysystem.sql.entities.PlayerEntity;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 public class EnderChestManager {
 
@@ -34,6 +33,8 @@ public class EnderChestManager {
 
     public void createEnderChest(EnderChestEntity entity) {
         final var uuid = entity.getPlayerEntity().getPlayerUuid();
+        if (hasEnderChest(uuid))
+            return;
         this.databaseManager.insertEntity(entity);
         this.playerEnderChests.refresh(uuid);
     }
@@ -45,15 +46,11 @@ public class EnderChestManager {
     }
 
     public boolean hasEnderChest(UUID uuid) {
-        return this.playerEnderChests.getIfPresent(uuid) != null;
+        return this.getEnderChest(uuid) != null;
     }
 
     public EnderChestEntity getEnderChest(UUID uuid) {
-        try {
-            return this.playerEnderChests.get(uuid);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return this.playerEnderChests.getIfPresent(uuid);
     }
 
     private EnderChestEntity loadEnderChest(UUID uuid) {
