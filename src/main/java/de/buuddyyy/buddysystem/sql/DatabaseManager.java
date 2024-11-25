@@ -1,6 +1,7 @@
 package de.buuddyyy.buddysystem.sql;
 
 import de.buuddyyy.buddysystem.configs.MainConfig;
+import de.buuddyyy.buddysystem.sql.entities.EnderChestEntity;
 import de.buuddyyy.buddysystem.sql.entities.HomeEntity;
 import de.buuddyyy.buddysystem.sql.entities.PlayerEntity;
 import de.buuddyyy.buddysystem.sql.entities.WarpEntity;
@@ -50,6 +51,7 @@ public final class DatabaseManager implements AutoCloseable {
         configuration.setProperty("hibernate.format_sql", String.valueOf(formatSql));
         configuration.setProperty("hibernate.hbm2ddl.auto", commandSql);
 
+        configuration.addAnnotatedClass(EnderChestEntity.class);
         configuration.addAnnotatedClass(HomeEntity.class);
         configuration.addAnnotatedClass(PlayerEntity.class);
         configuration.addAnnotatedClass(WarpEntity.class);

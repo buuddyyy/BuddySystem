@@ -27,7 +27,7 @@ public class HomeManager {
     public HomeManager(BuddySystemPlugin plugin, DatabaseManager databaseManager) {
         this.plugin = plugin;
         this.databaseManager = databaseManager;
-        this.playerHomes = CacheBuilder.newBuilder().build(new CacheLoader<UUID, HashMap<String, HomeEntity>>() {
+        this.playerHomes = CacheBuilder.newBuilder().build(new CacheLoader<>() {
             @Override
             public HashMap<String, HomeEntity> load(UUID uuid) {
                 return loadAllHomes(uuid);

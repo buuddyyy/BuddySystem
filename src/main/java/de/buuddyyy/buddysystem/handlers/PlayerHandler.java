@@ -3,7 +3,6 @@ package de.buuddyyy.buddysystem.handlers;
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
 import de.buuddyyy.buddysystem.managers.PlayerManager;
 import de.buuddyyy.buddysystem.sql.entities.PlayerEntity;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.sql.Timestamp;
@@ -20,7 +19,7 @@ public class PlayerHandler {
         this.playerManager = new PlayerManager(plugin, plugin.getDatabaseManager());
     }
 
-    public void handleJoin(Player player) {
+    public void handlePlayerJoin(Player player) {
         if (!player.hasPlayedBefore()) {
             plugin.getSpawnHandler().teleportPlayerToSpawnImmediately(player);
         }

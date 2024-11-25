@@ -1,6 +1,7 @@
 package de.buuddyyy.buddysystem.commands;
 
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
+import de.buuddyyy.buddysystem.handlers.EnderChestHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,9 +12,11 @@ import org.bukkit.inventory.Inventory;
 public class EnderChestCommand implements CommandExecutor {
 
     private final BuddySystemPlugin plugin;
+    private final EnderChestHandler enderChestHandler;
 
     public EnderChestCommand(BuddySystemPlugin plugin) {
         this.plugin = plugin;
+        this.enderChestHandler = plugin.getEnderChestHandler();
     }
 
     @Override
@@ -21,6 +24,7 @@ public class EnderChestCommand implements CommandExecutor {
         if (!(commandSender instanceof Player p)) {
             return false;
         }
+        /*
         if (p.isOp() && args.length == 1) {
             Player targetPlayer;
             if ((targetPlayer = Bukkit.getPlayer(args[0])) == null) {
@@ -36,7 +40,8 @@ public class EnderChestCommand implements CommandExecutor {
             p.openInventory(targetPlayer.getEnderChest());
         } else {
             p.openInventory(p.getEnderChest());
-        }
+        }*/
+        this.enderChestHandler.openEnderChest(p);
         return true;
     }
 
