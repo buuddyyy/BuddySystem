@@ -16,7 +16,7 @@ public class PlayerHandler {
 
     public PlayerHandler(BuddySystemPlugin plugin) {
         this.plugin = plugin;
-        this.playerManager = new PlayerManager(plugin, plugin.getDatabaseManager());
+        this.playerManager = new PlayerManager(plugin.getDatabaseManager());
     }
 
     public void handlePlayerJoin(Player player) {
@@ -54,6 +54,10 @@ public class PlayerHandler {
 
     public PlayerEntity getPlayerEntity(UUID playerUuid) {
         return this.playerManager.getPlayerEntity(playerUuid);
+    }
+
+    public PlayerEntity getPlayerEntityByName(String playerName) {
+        return this.playerManager.getPlayerByName(playerName);
     }
 
 }

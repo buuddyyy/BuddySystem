@@ -21,11 +21,9 @@ public class PlayerManager {
     @Getter
     private final LoadingCache<UUID, PlayerEntity> playerEntities;
 
-    private final BuddySystemPlugin plugin;
     private final DatabaseManager databaseManager;
 
-    public PlayerManager(BuddySystemPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public PlayerManager(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
         this.playerEntities = CacheBuilder.newBuilder().build(new CacheLoader<UUID, PlayerEntity>() {
             @Override
