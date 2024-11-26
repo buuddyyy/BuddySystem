@@ -45,6 +45,7 @@ public final class BuddySystemPlugin extends JavaPlugin {
     private SkipNightHandler skipNightHandler;
     private SpawnHandler spawnHandler;
     private WarpHandler warpHandler;
+    private EnderChestHandler enderChestHandler;
 
     private ProtocolManager protocolManager;
 
@@ -88,14 +89,18 @@ public final class BuddySystemPlugin extends JavaPlugin {
         this.skipNightHandler = new SkipNightHandler(this);
         this.spawnHandler = new SpawnHandler(this);
         this.warpHandler = new WarpHandler(this);
+        this.enderChestHandler = new EnderChestHandler(this);
     }
 
     private void registerEvents() {
         final PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new FoodLevelChangeListener(), this);
+        pm.registerEvents(new InventoryCloseListener(this), this);
+        pm.registerEvents(new InventoryOpenListener(this), this);
         pm.registerEvents(new PlayerBedEnterListener(this), this);
         pm.registerEvents(new PlayerBedLeaveListener(this), this);
         pm.registerEvents(new PlayerChangedWorldListener(this), this);
+        pm.registerEvents(new PlayerInteractListener(this), this);
         pm.registerEvents(new PlayerJoinListener(this), this);
         pm.registerEvents(new PlayerMoveListener(this), this);
         pm.registerEvents(new PlayerQuitListener(this), this);
