@@ -40,6 +40,9 @@ public class EnderChestHandler {
         if (targetPe == null) {
             return EnumEnderChestStatus.PLAYER_NOT_EXISTS;
         }
+        if (!this.enderChestManager.hasEnderChest(targetPe.getPlayerUuid())) {
+            return EnumEnderChestStatus.PLAYER_HAS_NOT_ENDERCHEST;
+        }
         player.setMetadata(METADATA_NAME, new FixedMetadataValue(this.plugin,
                 targetPe.getPlayerUuid().toString()));
         return this.openEnderChest(player, targetPe);
@@ -140,7 +143,8 @@ public class EnderChestHandler {
 
     public enum EnumEnderChestStatus {
         OK,
-        PLAYER_NOT_EXISTS
+        PLAYER_NOT_EXISTS,
+        PLAYER_HAS_NOT_ENDERCHEST
     }
 
 }

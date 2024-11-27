@@ -36,6 +36,7 @@ public class EnderChestCommand implements CommandExecutor {
             String message = String.format(switch(status) {
                 case OK -> "§7Du schaust dir das Inventar von §e%s §7an.";
                 case PLAYER_NOT_EXISTS -> "§cDieser Spieler existiert nicht!";
+                case PLAYER_HAS_NOT_ENDERCHEST -> "§cDieser Spieler hat noch keine EnderChest!";
             }, this.getPlayerName(targetPlayerName));
 
             p.sendMessage(this.plugin.getPrefix() + message);
