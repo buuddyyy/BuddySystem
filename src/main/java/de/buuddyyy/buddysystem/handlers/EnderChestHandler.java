@@ -35,7 +35,7 @@ public class EnderChestHandler {
         this.openEnderChest(player, pe);
     }
 
-    public EnumEnderChestStatus openEnderChest(Player player, String targetPlayerName) {
+    public EnumEnderChestStatus openEnderChestFromOtherPlayer(Player player, String targetPlayerName) {
         var targetPe = this.playerHandler.getPlayerEntityByName(targetPlayerName);
         if (targetPe == null) {
             return EnumEnderChestStatus.PLAYER_NOT_EXISTS;
@@ -76,9 +76,14 @@ public class EnderChestHandler {
     }
 
     public void handlePlayerJoin(Player player) {
+        if (!this.playerHandler.playerExists(player)){
+            return;
+        }
+
         if (this.enderChestManager.hasEnderChest(player.getUniqueId())) {
             return;
         }
+
         Bukkit.getScheduler().runTaskLater(this.plugin, () ->
                 this.integrateEnderChest(player), 2L);
     }
@@ -127,15 +132,17 @@ public class EnderChestHandler {
     }
 
     private void integrateEnderChest(Player player) {
-        var legacyEnderChest = player.getEnderChest();
         if (enderChestManager.hasEnderChest(player.getUniqueId())) {
             return;
         }
+
+        var legacyEnderChest = player.getEnderChest();
         var inv = Bukkit.createInventory(null, INVENTORY_SIZE);
         for (int i = 0; i < legacyEnderChest.getSize(); i++) {
             inv.setItem(i, legacyEnderChest.getItem(i));
         }
         legacyEnderChest.clear();
+
         var pe = this.playerHandler.getPlayerEntity(player);
         var entity = new EnderChestEntity(pe, inv);
         this.enderChestManager.createEnderChest(entity);

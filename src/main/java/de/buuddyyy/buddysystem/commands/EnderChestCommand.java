@@ -2,12 +2,10 @@ package de.buuddyyy.buddysystem.commands;
 
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
 import de.buuddyyy.buddysystem.handlers.EnderChestHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class EnderChestCommand implements CommandExecutor {
 
@@ -31,10 +29,10 @@ public class EnderChestCommand implements CommandExecutor {
                 return true;
             }
 
-            var status = this.enderChestHandler.openEnderChest(p, targetPlayerName);
+            var status = this.enderChestHandler.openEnderChestFromOtherPlayer(p, targetPlayerName);
 
             String message = String.format(switch(status) {
-                case OK -> "§7Du schaust dir das Inventar von §e%s §7an.";
+                case OK -> "§7Du schaust dir die Ender Chest von §e%s §7an.";
                 case PLAYER_NOT_EXISTS -> "§cDieser Spieler existiert nicht!";
                 case PLAYER_HAS_NOT_ENDERCHEST -> "§cDieser Spieler hat noch keine EnderChest!";
             }, this.getPlayerName(targetPlayerName));
