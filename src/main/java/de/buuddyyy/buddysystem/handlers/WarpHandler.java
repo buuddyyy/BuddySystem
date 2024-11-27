@@ -65,7 +65,8 @@ public class WarpHandler {
         }
         final var pe = playerHandler.getPlayerEntity(player);
         final var warpEntity = this.warpManager.getWarp(warpName);
-        if (warpEntity.getPlayerEntity().getId() != pe.getId()) {
+        if (warpEntity.getPlayerEntity().getId() != pe.getId()
+                || !player.isOp()) {
             return EnumPlayerWarpStatus.NOT_OWNER;
         }
         this.warpManager.deleteWarp(warpEntity);
