@@ -92,7 +92,7 @@ public final class DatabaseManager implements AutoCloseable {
     public void updateEntity(Object entityObject) {
         Transaction transaction = this.session.beginTransaction();
         try {
-            this.session.merge(entityObject);
+            this.session.update(entityObject);
             transaction.commit();
         } catch (Exception ex) {
             transaction.rollback();
