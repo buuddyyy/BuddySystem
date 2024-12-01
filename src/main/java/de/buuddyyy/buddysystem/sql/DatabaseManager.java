@@ -9,7 +9,6 @@ import jakarta.persistence.Query;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -17,8 +16,12 @@ import org.hibernate.service.ServiceRegistry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class DatabaseManager implements AutoCloseable {
+
+    private static final Logger LOGGER = Logger.getLogger(DatabaseManager.class.getName());
 
     private SessionFactory sessionFactory;
     @Getter private Session session;
@@ -69,7 +72,7 @@ public final class DatabaseManager implements AutoCloseable {
         if (collection == null || collection.isEmpty()) {
             return null;
         }
-        return ((ArrayList<T>) collection).get(0);
+        return ((ArrayList<T>) collection).getFirst();
     }
 
     public <T> Collection<T> queryResults(Class<T> clazz, final String sql, final Map<String, Object> parameters) {
@@ -79,42 +82,41 @@ public final class DatabaseManager implements AutoCloseable {
     }
 
     public void insertEntity(Object entityObject) {
-        Transaction transaction = this.session.beginTransaction();
-        try {
-            this.session.persist(entityObject);
-            transaction.commit();
-        } catch (Exception ex) {
-            transaction.rollback();
-            ex.printStackTrace();
-        }
+        executeInTransaction(() -> session.persist(entityObject));
     }
 
-    public void updateEntity(Object entityObject) {
-        Transaction transaction = this.session.beginTransaction();
-        try {
-            this.session.update(entityObject);
-            transaction.commit();
-        } catch (Exception ex) {
-            transaction.rollback();
-            ex.printStackTrace();
-        }
+    public void updateEntity(Mergeable entityObject) {
+        executeInTransaction(() -> {
+            var toMergedObj = session.merge(entityObject);
+            toMergedObj.toMerge(entityObject);
+        });
     }
 
     public void deleteEntity(Object entityObject) {
-        Transaction transaction = this.session.beginTransaction();
-        try {
-            this.session.delete(entityObject);
-            transaction.commit();
-        } catch (Exception ex) {
-            transaction.rollback();
-            ex.printStackTrace();
-        }
+        executeInTransaction(() -> session.remove(entityObject));
     }
 
     @Override
     public void close() {
-        session.close();
-        sessionFactory.close();
+        if (session != null && session.isOpen()) {
+            session.close();
+        }
+        if (sessionFactory != null && sessionFactory.isOpen()) {
+            sessionFactory.close();
+        }
+    }
+
+    private void executeInTransaction(Runnable runnable) {
+        var transaction = this.session.beginTransaction();
+        try {
+            runnable.run();
+            transaction.commit();
+        } catch (Exception ex) {
+            if (transaction != null && transaction.isActive())
+                transaction.rollback();
+            LOGGER.log(Level.SEVERE, "Database transaction failed.", ex);
+            throw new IllegalStateException("Database transaction failed.", ex);
+        }
     }
 
 }

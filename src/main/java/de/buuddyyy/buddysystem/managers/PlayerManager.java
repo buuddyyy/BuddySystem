@@ -51,6 +51,7 @@ public class PlayerManager {
 
     public void createPlayerEntity(Player player) {
         this.databaseManager.insertEntity(new PlayerEntity(player.getUniqueId(), player.getName()));
+        this.playerEntities.refresh(player.getUniqueId());
     }
 
     public void updatePlayerEntity(PlayerEntity playerEntity) {
