@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 public final class MainConfig {
@@ -33,6 +34,8 @@ public final class MainConfig {
     private void createDefaults() {
         final Map<String, Object> defaultsMap = Maps.newHashMap();
         defaultsMap.put("general.prefix", "&7[&bBuddySystem&7] &7");
+        defaultsMap.put("general.tablist.header", Arrays.asList("&7[&bBuddySystem&7]", ""));
+        defaultsMap.put("general.tablist.footer", Arrays.asList("", "&7Programmiert von &cbuddy"));
         defaultsMap.put("sql.driverClass", "com.mysql.cj.jdbc.Driver");
         defaultsMap.put("sql.url", "jdbc:mysql://localhost:3306/yourdatabase");
         defaultsMap.put("sql.username", "yourusername");
