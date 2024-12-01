@@ -22,6 +22,7 @@ public class EnderChestCommand implements CommandExecutor {
         if (!(commandSender instanceof Player p)) {
             return false;
         }
+        /*
         if (p.isOp() && args.length == 1) {
             final var targetPlayerName = args[0];
             if (p.getName().equalsIgnoreCase(targetPlayerName)) {
@@ -39,8 +40,9 @@ public class EnderChestCommand implements CommandExecutor {
 
             p.sendMessage(this.plugin.getPrefix() + message);
         } else {
+        */
             this.enderChestHandler.openEnderChest(p);
-        }
+        //}
         return true;
     }
 
