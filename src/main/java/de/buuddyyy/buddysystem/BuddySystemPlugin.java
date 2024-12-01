@@ -122,6 +122,7 @@ public final class BuddySystemPlugin extends JavaPlugin {
         this.registerCommand("warp", new WarpCommand(this));
         this.registerCommand("setwarp", new SetWarpCommand(this));
         this.registerCommand("delwarp", new DelWarpCommand(this));
+        this.getCommand("ping").setExecutor(new PingCommand(this));
     }
 
     private void registerCommand(String command, CommandExecutor commandExecutor) {
