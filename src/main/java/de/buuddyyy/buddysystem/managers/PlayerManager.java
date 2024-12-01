@@ -34,11 +34,10 @@ public class PlayerManager {
     }
 
     public boolean playerExists(Player player) {
+        if (playerEntities.getIfPresent(player.getUniqueId()) != null) {
+            return true;
+        }
         return loadPlayer(player.getUniqueId()) != null;
-    }
-
-    public PlayerEntity getPlayerEntity(Player player) {
-        return getPlayerEntity(player.getUniqueId());
     }
 
     public PlayerEntity getPlayerEntity(UUID playerUuid) {

@@ -50,7 +50,10 @@ public class EnderChestManager {
     }
 
     public boolean hasEnderChest(UUID uuid) {
-        return this.playerEnderChests.asMap().containsKey(uuid);
+        if (playerEnderChests.getIfPresent(uuid) != null) {
+            return true;
+        }
+        return loadEnderChest(uuid) != null;
     }
 
     public EnderChestEntity getEnderChest(UUID uuid) {
