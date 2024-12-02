@@ -20,7 +20,9 @@ import de.buuddyyy.buddysystem.events.*;
 import de.buuddyyy.buddysystem.handlers.*;
 import de.buuddyyy.buddysystem.protocol.ActionBarProtocolAdapter;
 import de.buuddyyy.buddysystem.sql.DatabaseManager;
+import de.buuddyyy.buddysystem.utils.EventRegistry;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -36,6 +38,8 @@ public final class BuddySystemPlugin extends JavaPlugin {
 
     @Setter
     private String prefix;
+
+    private EventRegistry eventRegistry;
 
     private MainConfig mainConfig;
     private DatabaseManager databaseManager;
@@ -63,6 +67,8 @@ public final class BuddySystemPlugin extends JavaPlugin {
 
         this.databaseManager = new DatabaseManager(this.mainConfig);
         this.databaseManager.openConnection();
+
+        this.eventRegistry = new EventRegistry(this);
 
         initHandlers();
 
