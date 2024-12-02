@@ -2,12 +2,10 @@ package de.buuddyyy.buddysystem.commands;
 
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
 import de.buuddyyy.buddysystem.handlers.EnderChestHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 public class EnderChestCommand implements CommandExecutor {
 
@@ -26,23 +24,32 @@ public class EnderChestCommand implements CommandExecutor {
         }
         /*
         if (p.isOp() && args.length == 1) {
-            Player targetPlayer;
-            if ((targetPlayer = Bukkit.getPlayer(args[0])) == null) {
-                p.sendMessage(this.plugin.getPrefix() + "§cDieser Spieler ist nicht online!");
-                return true;
-            }
-            if (p.equals(targetPlayer)) {
+            final var targetPlayerName = args[0];
+            if (p.getName().equalsIgnoreCase(targetPlayerName)) {
                 p.sendMessage(this.plugin.getPrefix() + "§cDu kannst nicht mit dir selbst interagieren!");
                 return true;
             }
-            p.sendMessage(this.plugin.getPrefix() + String.format("Du schaust dir die Enderchest von §e%s §7an.",
-                    targetPlayer.getName()));
-            p.openInventory(targetPlayer.getEnderChest());
+
+            var status = this.enderChestHandler.openEnderChestFromOtherPlayer(p, targetPlayerName);
+
+            String message = String.format(switch(status) {
+                case OK -> "§7Du schaust dir die Ender Chest von §e%s §7an.";
+                case PLAYER_NOT_EXISTS -> "§cDieser Spieler existiert nicht!";
+                case PLAYER_HAS_NOT_ENDERCHEST -> "§cDieser Spieler hat noch keine EnderChest!";
+            }, this.getPlayerName(targetPlayerName));
+
+            p.sendMessage(this.plugin.getPrefix() + message);
         } else {
-            p.openInventory(p.getEnderChest());
-        }*/
-        this.enderChestHandler.openEnderChest(p);
+        */
+            this.enderChestHandler.openEnderChest(p);
+        //}
         return true;
+    }
+
+    private String getPlayerName(String playerName) {
+        final var ph = this.plugin.getPlayerHandler();
+        var pe = ph.getPlayerEntityByName(playerName);
+        return (pe != null) ? pe.getPlayerName() : "UNKNOWN";
     }
 
 }

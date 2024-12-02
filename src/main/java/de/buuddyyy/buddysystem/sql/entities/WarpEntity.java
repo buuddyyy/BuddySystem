@@ -1,6 +1,7 @@
 package de.buuddyyy.buddysystem.sql.entities;
 
 import de.buuddyyy.buddysystem.managers.WarpManager;
+import de.buuddyyy.buddysystem.sql.Mergeable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import org.bukkit.World;
 @Table(name = WarpManager.TABLE_NAME, uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name"})
 })
-public class WarpEntity {
+public class WarpEntity implements Mergeable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,4 +59,9 @@ public class WarpEntity {
         return loc;
     }
 
+    @Override
+    public void toMerge(Mergeable mergeObj) {
+        var fromObj = (WarpEntity) mergeObj;
+        this.setLocation(fromObj.getLocation());
+    }
 }

@@ -1,6 +1,7 @@
 package de.buuddyyy.buddysystem.sql.entities;
 
 import de.buuddyyy.buddysystem.managers.EnderChestManager;
+import de.buuddyyy.buddysystem.sql.Mergeable;
 import de.buuddyyy.buddysystem.sql.converters.InventoryConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 @Table(name = EnderChestManager.TABLE_NAME, uniqueConstraints = {
         @UniqueConstraint(columnNames = {"playerId"})
 })
-public class EnderChestEntity {
+public class EnderChestEntity implements Mergeable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +34,12 @@ public class EnderChestEntity {
     }
 
     public EnderChestEntity() {
+    }
+
+    @Override
+    public void toMerge(Mergeable mergeObj) {
+        var fromObj = (EnderChestEntity) mergeObj;
+        this.inventory = fromObj.getInventory();
     }
 
 }
