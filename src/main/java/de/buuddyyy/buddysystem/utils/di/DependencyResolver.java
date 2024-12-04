@@ -27,6 +27,7 @@ public final class DependencyResolver {
             }
             T instance = createInstance(clazz);
             injectFields(instance);
+            FACTORIES.put(clazz, () -> instance);
             return instance;
         } catch (Exception ex) {
             throw new RuntimeException("Failed to resolve:", ex);
