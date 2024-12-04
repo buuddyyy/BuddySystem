@@ -100,6 +100,7 @@ public final class BuddySystemPlugin extends JavaPlugin {
         pm.registerEvents(new PlayerBedEnterListener(this), this);
         pm.registerEvents(new PlayerBedLeaveListener(this), this);
         pm.registerEvents(new PlayerChangedWorldListener(this), this);
+        pm.registerEvents(new PlayerDeathListener(this), this);
         pm.registerEvents(new PlayerInteractListener(this), this);
         pm.registerEvents(new PlayerJoinListener(this), this);
         pm.registerEvents(new PlayerMoveListener(this), this);
@@ -121,6 +122,7 @@ public final class BuddySystemPlugin extends JavaPlugin {
         this.registerCommand("warp", new WarpCommand(this));
         this.registerCommand("setwarp", new SetWarpCommand(this));
         this.registerCommand("delwarp", new DelWarpCommand(this));
+        this.getCommand("ping").setExecutor(new PingCommand(this));
     }
 
     private void registerCommand(String command, CommandExecutor commandExecutor) {

@@ -1,6 +1,7 @@
 package de.buuddyyy.buddysystem.sql.entities;
 
 import de.buuddyyy.buddysystem.managers.HomeManager;
+import de.buuddyyy.buddysystem.sql.Mergeable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -12,7 +13,7 @@ import org.bukkit.World;
 @Table(name = HomeManager.TABLE_NAME, uniqueConstraints = {
         @UniqueConstraint(columnNames = {"id", "name"})
 })
-public class HomeEntity {
+public class HomeEntity implements Mergeable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,4 +57,9 @@ public class HomeEntity {
         return loc;
     }
 
+    @Override
+    public void toMerge(Mergeable mergeObj) {
+        var fromObj = (HomeEntity) mergeObj;
+        this.setLocation(fromObj.getLocation());
+    }
 }

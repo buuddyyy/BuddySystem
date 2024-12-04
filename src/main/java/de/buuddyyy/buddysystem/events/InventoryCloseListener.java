@@ -1,6 +1,8 @@
 package de.buuddyyy.buddysystem.events;
 
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
+import de.buuddyyy.buddysystem.handlers.EnderChestHandler;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;

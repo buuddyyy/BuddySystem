@@ -16,7 +16,7 @@ public class PlayerHandler {
 
     public PlayerHandler(BuddySystemPlugin plugin) {
         this.plugin = plugin;
-        this.playerManager = new PlayerManager(plugin, plugin.getDatabaseManager());
+        this.playerManager = new PlayerManager(plugin.getDatabaseManager());
     }
 
     public void handlePlayerJoin(Player player) {
@@ -27,7 +27,7 @@ public class PlayerHandler {
             playerManager.createPlayerEntity(player);
             return;
         }
-        final PlayerEntity pe = playerManager.getPlayerEntity(player);
+        final PlayerEntity pe = playerManager.getPlayerEntity(player.getUniqueId());
         plugin.getHomeHandler().getHomeNames(player);
         if (player.getName().equals(pe.getPlayerName())) {
             return;
@@ -39,7 +39,7 @@ public class PlayerHandler {
     public void handleQuit(Player player) {
         if (!playerManager.playerExists(player))
             return;
-        final PlayerEntity pe = this.playerManager.getPlayerEntity(player);
+        final PlayerEntity pe = this.playerManager.getPlayerEntity(player.getUniqueId());
         pe.setLastOnline(Timestamp.from(Instant.now()));
         this.playerManager.updatePlayerEntity(pe);
     }
@@ -49,11 +49,15 @@ public class PlayerHandler {
     }
 
     public PlayerEntity getPlayerEntity(Player player) {
-        return this.playerManager.getPlayerEntity(player);
+        return this.playerManager.getPlayerEntity(player.getUniqueId());
     }
 
     public PlayerEntity getPlayerEntity(UUID playerUuid) {
         return this.playerManager.getPlayerEntity(playerUuid);
+    }
+
+    public PlayerEntity getPlayerEntityByName(String playerName) {
+        return this.playerManager.getPlayerByName(playerName);
     }
 
 }

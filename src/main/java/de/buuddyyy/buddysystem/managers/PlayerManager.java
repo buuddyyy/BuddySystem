@@ -21,11 +21,9 @@ public class PlayerManager {
     @Getter
     private final LoadingCache<UUID, PlayerEntity> playerEntities;
 
-    private final BuddySystemPlugin plugin;
     private final DatabaseManager databaseManager;
 
-    public PlayerManager(BuddySystemPlugin plugin, DatabaseManager databaseManager) {
-        this.plugin = plugin;
+    public PlayerManager(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
         this.playerEntities = CacheBuilder.newBuilder().build(new CacheLoader<UUID, PlayerEntity>() {
             @Override
@@ -36,11 +34,10 @@ public class PlayerManager {
     }
 
     public boolean playerExists(Player player) {
+        if (playerEntities.getIfPresent(player.getUniqueId()) != null) {
+            return true;
+        }
         return loadPlayer(player.getUniqueId()) != null;
-    }
-
-    public PlayerEntity getPlayerEntity(Player player) {
-        return getPlayerEntity(player.getUniqueId());
     }
 
     public PlayerEntity getPlayerEntity(UUID playerUuid) {
@@ -53,6 +50,7 @@ public class PlayerManager {
 
     public void createPlayerEntity(Player player) {
         this.databaseManager.insertEntity(new PlayerEntity(player.getUniqueId(), player.getName()));
+        this.playerEntities.refresh(player.getUniqueId());
     }
 
     public void updatePlayerEntity(PlayerEntity playerEntity) {

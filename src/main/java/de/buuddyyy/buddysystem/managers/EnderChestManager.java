@@ -11,10 +11,14 @@ import de.buuddyyy.buddysystem.sql.entities.PlayerEntity;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
 
 public class EnderChestManager {
 
     public static final String TABLE_NAME = "player_ender_chests";
+
+    private final static Logger LOGGER = Logger.getLogger(EnderChestManager.class.getName());
 
     private final LoadingCache<UUID, EnderChestEntity> playerEnderChests;
     private final BuddySystemPlugin plugin;
@@ -46,11 +50,18 @@ public class EnderChestManager {
     }
 
     public boolean hasEnderChest(UUID uuid) {
-        return this.getEnderChest(uuid) != null;
+        if (playerEnderChests.getIfPresent(uuid) != null) {
+            return true;
+        }
+        return loadEnderChest(uuid) != null;
     }
 
     public EnderChestEntity getEnderChest(UUID uuid) {
-        return this.playerEnderChests.getIfPresent(uuid);
+        try {
+            return this.playerEnderChests.get(uuid);
+        } catch (ExecutionException ex) {
+            throw new IllegalStateException("Player has not a Ender Chest", ex);
+        }
     }
 
     private EnderChestEntity loadEnderChest(UUID uuid) {
