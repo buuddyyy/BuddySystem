@@ -1,10 +1,9 @@
 package de.buuddyyy.buddysystem.events;
 
 import de.buuddyyy.buddysystem.BuddySystemPlugin;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -22,9 +21,16 @@ public class PlayerInteractListener implements Listener {
     private final BuddySystemPlugin plugin;
 
     private static final List<FastHarvestBlock> HARVESTABLE_BLOCKS = Arrays.asList(
-            new FastHarvestBlock(Material.WHEAT, Material.WHEAT_SEEDS, 7, 1, 2),
-            new FastHarvestBlock(Material.CARROT, 7, 0,1),
-            new FastHarvestBlock(Material.POTATO, 7, 0,1)
+            new FastHarvestBlock(Material.WHEAT, new FastHarvestBlock.HarvestDrop[]{
+                    new FastHarvestBlock.HarvestDrop(Material.WHEAT, 1, 2),
+                    new FastHarvestBlock.HarvestDrop(Material.WHEAT_SEEDS, 1, 3)
+            }),
+            new FastHarvestBlock(Material.CARROTS, Material.CARROT, 2, 4),
+            new FastHarvestBlock(Material.POTATOES, Material.POTATO, 2, 4),
+            new FastHarvestBlock(Material.BEETROOTS, new FastHarvestBlock.HarvestDrop[]{
+                    new FastHarvestBlock.HarvestDrop(Material.BEETROOT, 1, 4),
+                    new FastHarvestBlock.HarvestDrop(Material.BEETROOT_SEEDS, 2, 3)
+            })
     );
 
     public PlayerInteractListener(BuddySystemPlugin plugin) {
@@ -38,10 +44,14 @@ public class PlayerInteractListener implements Listener {
         FastHarvestBlock fastHarvestBlock;
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK
                 && event.getClickedBlock() != null
+                && !event.hasItem()
                 && (fastHarvestBlock = getHarvestableBlock(event.getClickedBlock().getType())) != null) {
             event.setCancelled(true);
             var block = event.getClickedBlock();
-            if (block.getData() < (byte) fastHarvestBlock.maxAge) {
+            if (!(block.getBlockData() instanceof Ageable a)) {
+                return;
+            }
+            if (a.getAge() < a.getMaximumAge()) {
                 return;
             }
             dropHarvest(fastHarvestBlock, event.getClickedBlock());
@@ -54,9 +64,13 @@ public class PlayerInteractListener implements Listener {
         block.setType(fastHarvestBlock.harvestMaterial);
         var w = block.getWorld();
         var loc = block.getLocation();
-        w.dropItemNaturally(loc, new ItemStack(fastHarvestBlock.harvestMaterial));
-        int dropAmount = random.nextInt(fastHarvestBlock.maxDrop) + fastHarvestBlock.minDrop;
-        w.dropItemNaturally(loc, new ItemStack(fastHarvestBlock.dropMaterial, dropAmount));
+
+        for (var harvestDrop : fastHarvestBlock.harvestDrops) {
+            int minDrop = harvestDrop.minDrop;
+            int maxDrop = harvestDrop.maxDrop;
+            int dropAmount = random.nextInt(maxDrop - minDrop) + minDrop;
+            w.dropItemNaturally(loc, new ItemStack(harvestDrop.dropMaterial, dropAmount));
+        }
     }
 
     private FastHarvestBlock getHarvestableBlock(Material material) {
@@ -71,21 +85,21 @@ public class PlayerInteractListener implements Listener {
     private static final class FastHarvestBlock {
 
         private final Material harvestMaterial;
-        private final Material dropMaterial;
-        private final int maxAge;
-        private final int minDrop;
-        private final int maxDrop;
+        private final HarvestDrop[] harvestDrops;
 
-        public FastHarvestBlock(Material harvestMaterial, int magAge, int minDrop, int maxDrop) {
-            this(harvestMaterial, harvestMaterial, magAge, minDrop, maxDrop);
+        public FastHarvestBlock(Material harvestMaterial, Material dropMaterial, int minDrop, int maxDrop) {
+            this(harvestMaterial, new HarvestDrop[] {
+                    new HarvestDrop(dropMaterial, minDrop, maxDrop)
+            });
         }
 
-        public FastHarvestBlock(Material harvestMaterial, Material dropMaterial, int maxAge, int minDrop, int maxDrop) {
+        public FastHarvestBlock(Material harvestMaterial, HarvestDrop[] harvestDrops) {
             this.harvestMaterial = harvestMaterial;
-            this.dropMaterial = dropMaterial;
-            this.maxAge = maxAge;
-            this.minDrop = minDrop;
-            this.maxDrop = maxDrop;
+            this.harvestDrops = harvestDrops;
+        }
+
+        private record HarvestDrop(Material dropMaterial, int minDrop, int maxDrop) {
+
         }
 
     }
